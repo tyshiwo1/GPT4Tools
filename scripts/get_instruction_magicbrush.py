@@ -68,19 +68,27 @@ if __name__=="__main__":
     parser.add_argument("--temperature", default=0.7, help="temperature for chatgpt.")
     args = parser.parse_args()
 
-    openai.api_key = os.getenv('OPENAI_API_KEY')
+    # openai.api_key = os.getenv('OPENAI_API_KEY')
     
-    print(INSTRUCTION_PROMPT.format(caption=""))
+    # print(INSTRUCTION_PROMPT.format(caption=""))
+
+    with open(os.path.join('./', 'dev', 'edit_sessions.json')) as f:
+        edit_dict = json.load(f)
+        f.close()
     
     caption_path = args.caption_path
     instruction_path = args.instruction_path
     temp = args.temperature
     annotations = json.load(open(caption_path, 'r'))
     instructions = []
-    for idx, annot in enumerate(tqdm(annotations)):
+    for idx, annot in enumerate(tqdm( annotations )):
         caption = annot['caption']
         messages = [{'role': 'system', 'content': INSTRUCTION_PROMPT.format(caption=caption)}]
-        response = chatgpt(messages, temperature=temp)
+        # response = chatgpt(messages, temperature=temp)
+
+        file_name = annot['file_name'].split('-')[0]
+        response = edit_dict[file_name][0]['instruction'] 
+
         instructions.append({'file_name': annot['file_name'], 'caption': caption, 'instructions': response})
         if idx % 10 == 0:
             print(f'Dumping {idx}/{len(annotations)}')

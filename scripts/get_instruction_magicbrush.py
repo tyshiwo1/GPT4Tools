@@ -61,7 +61,7 @@ def chatgpt(messages, temperature=0.7):
 
 
 if __name__=="__main__":
-    
+    # python3 scripts/get_instruction.py --caption-path ./caption_path.json --instruction-path ./instruction_path.json
     parser = argparse.ArgumentParser()
     parser.add_argument("--caption-path", required=True, help="path to caption file.")
     parser.add_argument("--instruction-path", required=True, help="path to instruction file.")

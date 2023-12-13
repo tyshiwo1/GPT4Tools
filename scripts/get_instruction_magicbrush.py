@@ -61,7 +61,7 @@ def chatgpt(messages, temperature=0.7):
 
 
 if __name__=="__main__":
-    # python3 scripts/get_instruction.py --caption-path ./caption_path.json --instruction-path ./instruction_path.json
+    # python3 scripts/get_instruction_magicbrush.py --caption-path ./caption_path.json --instruction-path ./instruction_path.json
     parser = argparse.ArgumentParser()
     parser.add_argument("--caption-path", required=True, help="path to caption file.")
     parser.add_argument("--instruction-path", required=True, help="path to instruction file.")
@@ -84,12 +84,13 @@ if __name__=="__main__":
     for idx, annot in enumerate(tqdm( annotations )):
         caption = annot['caption']
         messages = [{'role': 'system', 'content': INSTRUCTION_PROMPT.format(caption=caption)}]
+        
         # response = chatgpt(messages, temperature=temp)
-
         file_name = annot['file_name'].split('-')[0]
-        response = edit_dict[file_name][0]['instruction'] 
+        instruction = edit_dict[file_name][0]['instruction']
+        response = instruction + ' [' + 'Edit Image Using Text' + ', ' + '"{}"'.format( annot['file_name'] )  + ' , ' + instruction + '] .'
 
-        instructions.append({'file_name': annot['file_name'], 'caption': caption, 'instructions': response})
+        instructions.append({'file_name': annot['file_name'], 'caption': caption, 'instructions': response, 'id': idx })
         if idx % 10 == 0:
             print(f'Dumping {idx}/{len(annotations)}')
             json.dump(instructions, open(instruction_path, 'w'))

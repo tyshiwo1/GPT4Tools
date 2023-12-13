@@ -31,7 +31,8 @@ TOOLS = {
   'Line Detection On Image': 'useful when you want to detect the straight line of the image. like: detect the straight lines of this image, or straight line detection on image, or perform straight line detection on this image, or detect the straight line image of this image. The input to this tool should be a string, representing the image_path',
   'Segment the given object': 'useful when you only want to segment the certain objects in the pictureaccording to the given textlike: segment the cat,or can you segment an obeject for meThe input to this tool should be a comma separated string of two, representing the image_path, the text description of the object to be found',
   'Remove Something From The Photo': 'useful when you want to remove and object or something from the photo from its description or location. The input to this tool should be a comma separated string of two, representing the image_path and the object need to be removed.',
-  'Replace Something From The Photo': 'useful when you want to replace an object from the object description or location with another object from its description. The input to this tool should be a comma separated string of three, representing the image_path, the object to be replaced, the object to be replaced with'
+  'Replace Something From The Photo': 'useful when you want to replace an object from the object description or location with another object from its description. The input to this tool should be a comma separated string of three, representing the image_path, the object to be replaced, the object to be replaced with',
+  'Edit Image Using Text': 'useful when you want to change the objects according to the text. like: alter the action of the objects in this image, or change the facial expression of the people in this image according to the text, or complete the objects in the image according to the text, or remove the objects in this image according to the text. The input to this tool should be a comma-separated string of two, representing the image_path and the text.',
 }
 
 TOOLS_OUTPUT_FORMAT = {
@@ -57,7 +58,8 @@ TOOLS_OUTPUT_FORMAT = {
   'Line Detection On Image': 'image_path',
   'Segment the given object': 'image_path',
   'Remove Something From The Photo': 'image_path',
-  'Replace Something From The Photo': 'image_path' 
+  'Replace Something From The Photo': 'image_path',
+  'Edit Image Using Text': 'image_path',
 }
 
 TOOLS_NEED_IMAGE = {
@@ -83,7 +85,8 @@ TOOLS_NEED_IMAGE = {
   'Line Detection On Image': True,
   'Segment the given object': True,
   'Remove Something From The Photo': True,
-  'Replace Something From The Photo': True 
+  'Replace Something From The Photo': True,
+  'Edit Image Using Text': True,
 }
 
 TOOLS_CONDITION = {
@@ -109,7 +112,8 @@ TOOLS_CONDITION = {
   'Line Detection On Image': None,
   'Segment the given object': None,
   'Remove Something From The Photo': None,
-  'Replace Something From The Photo': None 
+  'Replace Something From The Photo': None,
+  'Edit Image Using Text': None,
 }
 
 TOOL_NUM_ARGS = {
@@ -135,7 +139,8 @@ TOOL_NUM_ARGS = {
   'Line Detection On Image': 1,
   'Segment the given object': 2,
   'Remove Something From The Photo': 2,
-  'Replace Something From The Photo': 3
+  'Replace Something From The Photo': 3,
+  'Edit Image Using Text': 2,
 }
 
 PROMPT_FORMAT = """GPT4Tools can handle various text and visual tasks, such as answering questions and providing in-depth explanations and discussions. It generates human-like text and uses tools to indirectly understand images. When referring to images, GPT4Tools follows strict file name rules. To complete visual tasks, GPT4Tools uses tools and stays loyal to observation outputs. Users can provide new images to GPT4Tools with a description, but tools must be used for subsequent tasks.
@@ -203,8 +208,10 @@ def random_image_name(num_chars=8):
 
 
 def parse_instuct(inst):
+    print(inst)
     inst = (inst[3:].strip())
     inst = re.split('\[|\]', inst)
+    print(inst)
     instruction = inst[0].replace('"', '').strip()
     tool_name = inst[1].split(',')[0].strip()
     tool_prefix_len = len(tool_name)
@@ -220,11 +227,16 @@ def parse_instuct(inst):
         if tool_name.lower() == ori_name.lower():
             tool_name = ori_name
             break 
+    
+    print(tool_name, inst[1])
     #####################
     assert tool_name in TOOLS, f'invalid tool name: {tool_name}'
     args = inst[1][tool_prefix_len + 1:].split(',')
+    print(args)
     for idx, arg in enumerate(args):
         args[idx] = arg.replace('"', '').strip()
+    
+    print(args, len(args))
     assert len(args) >= TOOL_NUM_ARGS[tool_name], f'invalid number of arguments for tool {tool_name}: {args}'
     if len(args) > TOOL_NUM_ARGS[tool_name]:
         if TOOLS_NEED_IMAGE[tool_name]:
@@ -232,8 +244,8 @@ def parse_instuct(inst):
             args = [args[0], ','.join(args[1:])]
         else:
             args = [','.join(args)]
-    if TOOLS_NEED_IMAGE[tool_name]:
-        assert args[0] == 'example.jpg', f'invalid image name: {args[0]}'
+    # if TOOLS_NEED_IMAGE[tool_name]:
+        # assert args[0] == 'example.jpg', f'invalid image name: {args[0]}'
     return instruction, tool_name, args
 
 
@@ -290,12 +302,13 @@ def generate_annotations(data):
     for item in tqdm(data):
         insts = item['instructions'].split('\n')
         for inst in insts:
+            # print(inst, 'inst')
             caption = item['caption']
-            try:
-                instruction, tool_name, args = parse_instuct(inst)
-            except Exception as err:
-                print(f'skip instruction: {inst} due to error: {err}')
-                continue
+            # try:
+            instruction, tool_name, args = parse_instuct(inst)
+            # except Exception as err:
+            #     print(f'skip instruction: {inst} due to error: {err}')
+            #     continue
             image_path = random_image_name()
             for idx, arg in enumerate(args):
                 args[idx] = arg.replace('example.jpg', image_path)
@@ -390,21 +403,23 @@ if __name__ == '__main__':
     parser.add_argument('--max_num_images', default=3000, help='max number of samples.')
     args = parser.parse_args()
 
-    data = json.load(open(args.input_path, 'r'))
-    np.random.shuffle(data)
-    data = data[:min(args.max_num_images, len(data))]
+    instruction = json.load(open(args.input_path, 'r'))
+    # np.random.shuffle(instruction)
+    instruction = instruction[:min(args.max_num_images, len(instruction))]
     if args.caption_path is not None:
         captions = json.load(open(args.caption_path, 'r'))
-        captions = {item['image_id']: item['caption'] for item in captions['annotations']}
-        for item in data:
+        # captions = {item['image_id']: item['caption'] for item in captions['annotations']}
+        for item in instruction:
             idx = int(item['id'])
             caption = captions[idx]
+            # print(item['id'], idx, len(captions))
+            # assert False
             if caption is not None:
                 item['caption'] = caption
             else:
                 print(f'skip null caption of {idx}')
 
-    annotations, meta = generate_annotations(data)
+    annotations, meta = generate_annotations(instruction)
 
     if args.filter:
         annotations = filter_annotations(annotations, meta)
@@ -422,3 +437,11 @@ if __name__ == '__main__':
 
     print(f'generated {len(annotations)} annotations.')
     json.dump(annotations, open(args.output_path, 'w'))
+
+'''
+python3 scripts/generate_annoations.py --input-path ./instruction_path.json --output-path ./annotations_path.json  --caption-path ./caption_path.json --filter --complement 
+
+--insert-alpaca  --alpaca-path <your_alpaca_instruction_path>  
+
+python3 scripts/get_instruction_magicbrush.py --caption-path ./caption_path.json --instruction-path ./instruction_path.json
+'''

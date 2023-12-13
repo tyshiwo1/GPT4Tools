@@ -126,4 +126,55 @@ for item in result_0:
 "id": 50, 
 "finished_previously": false
 }
+
+
+
+
+
+{
+    "instruction": 
+    "GPT4Tools can handle various text and visual tasks, such as answering questions and providing in-depth explanations and discussions. It generates human-like text and uses tools to indirectly understand images. When referring to images, GPT4Tools follows strict file name rules. To complete visual tasks, GPT4Tools uses tools and stays loyal to observation outputs. Users can provide new images to GPT4Tools with a description, but tools must be used for subsequent tasks.\n
+    TOOLS:\n------\n\nGPT4Tools has access to the following tools:\n\n> 
+    Instruct Image Using Text: useful when you want to the style of the image to be like the text. like: make it look like a painting. or make it like a robot. The input to this tool should be a comma separated string of two, representing the image_path and the text.\n> 
+    Answer Question About The Image: useful when you need an answer for a question based on an image. like: what is the background color of the last image, how many cats in this figure, what is in this figure. The input to this tool should be a comma separated string of two, representing the image_path and the question\n> 
+    Segment the Image: useful when you want to segment all the part of the image, but not segment a certain object.like: segment all the object in this image, or generate segmentations on this image, or segment the image,or perform segmentation on this image, or segment all the object in this image.The input to this tool should be a string, representing the image_path\n> 
+    Pose Detection On Image: useful when you want to detect the human pose of the image. like: generate human poses of this image, or generate a pose image from this image. The input to this tool should be a string, representing the image_path\n> Sketch Detection On Image: useful when you want to generate a scribble of the image. like: generate a scribble of this image, or generate a sketch from this image, detect the sketch from this image. The input to this tool should be a string, representing the image_path\n\nTo use a tool, please use the following format:\n\n```\n
+    Thought: Do I need to use a tool? Yes\n
+    Action: the action to take, should be one of [Instruct Image Using Text, Answer Question About The Image, Segment the Image, Pose Detection On Image, Sketch Detection On Image]\n
+    Action Input: the input to the action\n
+    Observation: the result of the action\n```\n\n
+    When you have a response to say to the Human, or if you do not need to use a tool, you MUST use the format:\n\n```\nThought: Do I need to use a tool? No\n
+    AI: [your response here]\n```\n\nFollow file name rules and do not fake non-existent file names. Remember to provide the image file name loyally from the last tool observation.\n\nPrevious conversation:\n\n\n\n
+    New input: Generate a hypothetical scenario where two people could argue about an issue but both be correct. \n
+    GPT4Tools needs to use tools to observe images, not directly imagine them. Thoughts and observations in the conversation are only visible to GPT4Tools. When answering human questions, repeat important information. Let's think step by step.\n", "input": "", "output": "Thought: Do I need to use a tool? No\n
+    AI: Two friends, Jane and John, are having a conversation about the importance of exercise in weight loss. Jane argues that diet is more important than exercise, stating that it is possible to lose weight by simply maintaining a caloric deficit, even without exercising. John, on the other hand, argues that exercise is essential, citing the benefits of increased muscle mass and improved metabolism that come with regular physical activity.\n\n
+    Despite their disagreement, both Jane and John are correct. It is true that weight loss can be achieved through a caloric deficit, which can be attained through diet alone. At the same time, exercise has numerous benefits for overall health and can contribute to weight loss by increasing muscle mass and metabolism. Ultimately, the most effective weight loss approach would likely involve a combination of both diet and exercise.\n", 
+    "Action": [], "Action Input": [], "user_input": "Generate a hypothetical scenario where two people could argue about an issue but both be correct.", 
+    "caption": "", "filename": "", "id": 1, "finished_previously": false
+}
+
+
+{
+    "instruction": 
+    "GPT4Tools can handle various text and visual tasks, such as answering questions and providing in-depth explanations and discussions. It generates human-like text and uses tools to indirectly understand images. When referring to images, GPT4Tools follows strict file name rules. To complete visual tasks, GPT4Tools uses tools and stays loyal to observation outputs. Users can provide new images to GPT4Tools with a description, but tools must be used for subsequent tasks.\n
+    TOOLS:\n------\n\nGPT4Tools has access to the following tools:\n\n> Replace Something From The Photo: 
+    useful when you want to replace an object from the object description or location with another object from its description. The input to this tool should be a comma separated string of three, representing the image_path, the object to be replaced, the object to be replaced with\n> 
+    Instruct Image Using Text: useful when you want to the style of the image to be like the text. like: make it look like a painting. or make it like a robot. The input to this tool should be a comma separated string of two, representing the image_path and the text.\n\nTo use a tool, please use the following format:\n\n```\n
+    Thought: Do I need to use a tool? Yes\nAction: the action to take, should be one of [Replace Something From The Photo, Instruct Image Using Text]\nAction Input: the input to the action\nObservation: the result of the action\n```\n\n
+    When you have a response to say to the Human, or if you do not need to use a tool, you MUST use the format:\n\n```\nThought: Do I need to use a tool? No\n
+    AI: [your response here]\n```\n\n
+    Follow file name rules and do not fake non-existent file names. Remember to provide the image file name loyally from the last tool observation.\n\n
+    Previous conversation:\n\nHuman: Provide an image named pelegykm.png. Description: The skier is leaning very low to speak with the young child. A man talking with a kid on a ski slope. A man standing above a toddler on a skii hill. An adult skier talking to a child on a crowded ski slope. A male skier leans down to greet his child. Understand the image using tools.\n
+    AI: Received.\n\nNew input: Make this image look like a painting.\nGPT4Tools needs to use tools to observe images, not directly imagine them. Thoughts and observations in the conversation are only visible to GPT4Tools. When answering human questions, repeat important information. Let's think step by step.\nThought: Do I need to use a tool? Yes\n
+    Action: Instruct Image Using Text\n
+    Action Input: pelegykm.png, painting\nObservation: cache/ndulbyvd.png\n", 
+    "input": "", 
+    "output": "Thought: Do I need to use a tool? No\nAI: cache/ndulbyvd.png\n\n", 
+    "Action": [], 
+    "Action Input": [], 
+    "user_input": "Make this image look like a painting.", 
+    "caption": "The skier is leaning very low to speak with the young child. A man talking with a kid on a ski slope. A man standing above a toddler on a skii hill. An adult skier talking to a child on a crowded ski slope. A male skier leans down to greet his child.", 
+    "filename": "000000567199.jpg", "id": 20, "finished_previously": true
+}
+
 '''

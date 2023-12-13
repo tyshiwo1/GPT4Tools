@@ -13,6 +13,10 @@ for k_name, img_cap_dict in cap_dict.items():
         print(img_name)
         if img_name.split('.')[-2].split('-')[-1] == 'input' :
             annotation = dict()
+            
+            # annotation['annotations'] = #img_name.split('-')[0]
+
+
             annotation['file_name'] = img_name
             annotation['caption'] = cap
             print(annotation)

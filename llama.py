@@ -26,7 +26,9 @@ class LlamaHuggingFace:
                  temperature=0.1,
                  top_p=0.75,
                  top_k=40,
-                 num_beams=1):
+                 num_beams=1,
+                 cache_dir="./checkpoints",
+                 ):
         self.task = task
         self.device = device
         self.temperature = temperature
@@ -35,14 +37,15 @@ class LlamaHuggingFace:
         self.top_k = top_k
         self.num_beams = num_beams
         self.tokenizer = LlamaTokenizer.from_pretrained(
-            base_model, use_fast=False)
+            base_model, use_fast=False, cache_dir=cache_dir, )
         model = LlamaForCausalLM.from_pretrained(
             base_model,
-            torch_dtype=torch.float16)
+            torch_dtype=torch.float16,
+            cache_dir=cache_dir, )
         self.model = PeftModel.from_pretrained(
             model,
             lora_model,
-            torch_dtype=torch.float16)
+            torch_dtype=torch.float16, cache_dir=cache_dir, )
         self.model.to(device)
 
         self.tokenizer.pad_token_id = 0

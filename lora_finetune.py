@@ -109,14 +109,16 @@ def train(
     if len(wandb_log_model) > 0:
         os.environ["WANDB_LOG_MODEL"] = wandb_log_model
 
+    cache_dir="./checkpoints"
     model = LlamaForCausalLM.from_pretrained(
         base_model,
         load_in_8bit=True,
         torch_dtype=torch.float16,
         device_map=device_map,
+        cache_dir=cache_dir, 
     )
 
-    tokenizer = LlamaTokenizer.from_pretrained(base_model)
+    tokenizer = LlamaTokenizer.from_pretrained(base_model, cache_dir=cache_dir, )
 
     tokenizer.pad_token_id = (
         0  # unk. we want this to be different from the eos token
@@ -212,8 +214,8 @@ def train(
 
     if val_set_size > 0:
         train_val = data["train"].train_test_split(
-            test_size=val_set_size, shuffle=True, seed=42
-        )
+            test_size=0.2, shuffle=True, seed=42
+        ) #val_set_size
         train_data = (
             train_val["train"].shuffle().map(generate_and_tokenize_prompt)
         )

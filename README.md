@@ -49,7 +49,7 @@ The only things needed are finetuned the LoRA with the provided instruction, whi
 
 
 ```
-git clone https://github.com/stevengrove/GPT4Tools
+git clone /https://github.com/tyshiwo1/GPT4Tools
 cd GPT4Tools
 pip install -r requirements.txt
 ```

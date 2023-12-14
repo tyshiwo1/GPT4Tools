@@ -4,7 +4,7 @@
 
 
 
-Tengyao, Sun Kaiyue, Li Maomao
+### Tengyao, Sun Kaiyue, Li Maomao
 
 GPT4Tools is a centralized system that can control multiple visual foundation models. 
 It is based on Vicuna (LLaMA), and 71K self-built instruction data.
@@ -64,19 +64,7 @@ Steps:
 2. Using the [FastChat](https://github.com/lm-sys/FastChat/blob/main/README.md) to get Vicuna weigths by applying [the delta weights](https://huggingface.co/lmsys), more details please check [here](https://github.com/lm-sys/FastChat#vicuna-weights).
 3. Get the LoRA weights of GPT4Tools ([Hugging Face](https://huggingface.co/stevengrove/gpt4tools-vicuna-13b-lora), [OneDrive](https://1drv.ms/f/s!AqPQkBZ4aeVnhRzM69NOXLyG8cTY?e=apmpyQ), or [Google Driver](https://drive.google.com/drive/folders/1ebUINGR0QzNL-4hoKl19-6D_5rfeWTPD?usp=share_link)).
 
-### Tools
-GPT4Tools can support 22 tools, more details please check [tools.md](docs/tools.md).
-When using tools for the first time, the weights of tools need to be downloaded. If you don't like stored them on default cache, please revise the shell environment varibles: 
-```
-export TRANSFORMERS_CACHE=${your_transformers_cache}
-export HUGGINGFACE_HUB_CACHE=${your_diffusers_cache}
-```
-For SAM (Segmenting tools) and GrundingDINO (Text2Box tools):
-```
-export checkpoints=${your_checkpoints_cache} 
-# or
-ln -s ${your_checkpoints_path} checkpoints
-```
+
 
 ### Serving with Web GUI 
 Making a gradio interface on your own devices:

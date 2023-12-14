@@ -175,7 +175,7 @@ class MagicBrush:
         print(f"Initializing MagicBrush to {device}")
         self.device = device
         self.torch_dtype = torch.float16 if 'cuda' in device else torch.float32
-        self.pipe = StableDiffusionInstructPix2PixPipeline.from_pretrained("timbrooks/instruct-pix2pix",
+        self.pipe = StableDiffusionInstructPix2PixPipeline.from_pretrained("osunlp/InstructPix2Pix-MagicBrush",
                                                                            safety_checker=None,
                                                                            torch_dtype=self.torch_dtype).to(device)
         self.pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(self.pipe.scheduler.config)

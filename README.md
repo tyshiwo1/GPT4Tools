@@ -1,32 +1,18 @@
-# GPT4Tools: Teaching LLM to Use Tools via Self-instruction
+# EFE: Empowering  Large Language Models with Fine-grained Image Editing
 
-[Lin Song](http://linsong.info/), [Yanwei Li](https://yanwei-li.com/), [Rui Yang](https://github.com/Yangr116), Sijie Zhao, [Yixiao Ge](https://geyixiao.com/), [Ying Shan](https://scholar.google.com/citations?user=4oXBp9UAAAAJ&hl=en)
 
-GPT4Tools is a centralized system that can control multiple visual foundation models. 
-It is based on Vicuna (LLaMA), and 71K self-built instruction data.
+
+
+
+### Tengyao, Sun Kaiyue, Li Maomao
+
+Our work is based on GPT4Tools (https://github.com/AILab-CVC/GPT4Tools), which is a centralized system that can control multiple visual foundation models. It is based on Vicuna (LLaMA), and 71K self-built instruction data.
 By analyzing the language content, GPT4Tools is capable of automatically deciding, controlling, and utilizing different visual foundation models, allowing the user to interact with images during a conversation.
-With this approach, GPT4Tools provides a seamless and efficient solution to fulfill various image-related requirements in a conversation.
-Different from previous work, we support users teach their own LLM to use tools with simple refinement via self-instruction and LoRA.
-
-<a href='https://gpt4tools.github.io'><img src='https://img.shields.io/badge/Project-Page-Green'></a>  <a href='https://huggingface.co/stevengrove/gpt4tools-vicuna-13b-lora'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model-blue'></a>  [![YouTube](https://badges.aleen42.com/src/youtube.svg)](https://youtu.be/Qrj94ibQIT8) [![arXiv](https://img.shields.io/badge/arXiv-Paper-<COLOR>.svg)](https://arxiv.org/pdf/2305.18752.pdf)
-
-## Updates
-
-* 🔥 We now release the <a href='https://arxiv.org/pdf/2305.18752.pdf'><strong><font color='#008AD7'>paper</font></strong></a> and new <a href='https://huggingface.co/spaces/stevengrove/GPT4Tools'><strong><font color='#008AD7'>demo</font></strong></a> with LLAVA, OPT, LlaMA and Vicuna.
-* 🔥 We released pretrained GPT4Tools models with <strong><font color="#008AD7">Vicuna-13B</font></strong> and released the dataset for <strong><font color="#008AD7">self-instruction</font></strong>. Check out the blog and demo.
-
-## Demo
-We provide some selected examples using GPT4Tools in this section. More examples can be found in our [project page](https://gpt4tools.github.io). Feel free to try our onlin [demo](https://c60eb7e9400930f31b.gradio.live)!
+With this approach, GPT4Tools provides a seamless and efficient solution to fulfill various image-related requirements in a conversation. We empowere  Large Language Models with MagicBrush image editing ability.
 
 
-<div align=center>
-<img width="80%" src="demos/demo.gif"/>
-</div>
+ 
 
-  |   |   |
-:-------------------------:|:-------------------------:
-![segment](demos/demo_seg.png) |  ![detect kps](demos/demo_kps.png)
-![solve problem](demos/demo_explain.png)  |  ![style transfer](demos/demo_style.png)
 
 ## Dataset
 | **Data file name** | **Size** | OneDrive| Google Driver|
@@ -46,24 +32,9 @@ We fed GPT-3.5 with captions from 3K images and descriptions of 22 visual tasks.
 
 ### Data Generation
 
-During generation using GPT-3.5, the openai api_key should be set in the env (OPENAI_API_KEY).
 
-* Raw Data Generation
-```
-python3 scripts/get_instruction.py --caption-path <your_caption_data_path> \
-	--instruction-path <instruction_data_path> 
-```
+xxxxxxxxx
 
-* Cleaning, and Instructional Data Consutruction
-```
-python3 scripts/generate_annoations.py --input-path <instruction_data_path> \
-	--output-path <annotations_path> \
-	--caption-path <your_caption_data_path> \
-	--alpaca-path <your_alpaca_instruction_path> \
-	--filter \
-	--complement \
-	--insert-alpaca
-```
 
 
 ## Models
@@ -78,7 +49,7 @@ The only things needed are finetuned the LoRA with the provided instruction, whi
 
 
 ```
-git clone https://github.com/stevengrove/GPT4Tools
+git clone /https://github.com/tyshiwo1/GPT4Tools
 cd GPT4Tools
 pip install -r requirements.txt
 ```
@@ -93,19 +64,7 @@ Steps:
 2. Using the [FastChat](https://github.com/lm-sys/FastChat/blob/main/README.md) to get Vicuna weigths by applying [the delta weights](https://huggingface.co/lmsys), more details please check [here](https://github.com/lm-sys/FastChat#vicuna-weights).
 3. Get the LoRA weights of GPT4Tools ([Hugging Face](https://huggingface.co/stevengrove/gpt4tools-vicuna-13b-lora), [OneDrive](https://1drv.ms/f/s!AqPQkBZ4aeVnhRzM69NOXLyG8cTY?e=apmpyQ), or [Google Driver](https://drive.google.com/drive/folders/1ebUINGR0QzNL-4hoKl19-6D_5rfeWTPD?usp=share_link)).
 
-### Tools
-GPT4Tools can support 22 tools, more details please check [tools.md](docs/tools.md).
-When using tools for the first time, the weights of tools need to be downloaded. If you don't like stored them on default cache, please revise the shell environment varibles: 
-```
-export TRANSFORMERS_CACHE=${your_transformers_cache}
-export HUGGINGFACE_HUB_CACHE=${your_diffusers_cache}
-```
-For SAM (Segmenting tools) and GrundingDINO (Text2Box tools):
-```
-export checkpoints=${your_checkpoints_cache} 
-# or
-ln -s ${your_checkpoints_path} checkpoints
-```
+
 
 ### Serving with Web GUI 
 Making a gradio interface on your own devices:
@@ -192,12 +151,4 @@ The openai api_key should be set in the env (OPENAI_API_KEY).
 * [Vicuna](https://github.com/lm-sys/FastChat): The language ability of Vicuna is fantastic and amazing. And it is open-source!
 * [Alpaca-LoRA](https://github.com/tloen/alpaca-lora): Instruct-tune LLaMA on consumer hardware.
 
-If you're using our GPT4Tools in your research or applications, please cite using this BibTeX:
-```
-@misc{gpt4tools,
-  title = {GPT4Tools: Teaching LLM to Use Tools via Self-instruction},
-  author={Rui Yang, Lin Song, Yanwei Li, Sijie Zhao, Yixiao Ge, Xiu Li, Ying Shan},
-  journal={arXiv preprint arXiv:2305.18752},
-  year={2023}
-}
-```
+

@@ -24,5 +24,10 @@ scp -r -P 22000 yaoteng@147.8.183.113:/home/yaoteng/checkpoints/
 
 python3 get_cap_magicbrush.py --dev "dev" --global-descriptions "global_descriptions.json" --local-descriptions "local_descriptions.json" --caption-path "devtest_magicbrash_caption.json"
 python3 get_cap_magicbrush.py --dev "test" --global-descriptions "global_descriptions.json" --local-descriptions "local_descriptions.json" --caption-path "devtest_magicbrash_caption.json"
-python3 scripts/get_instruction_magicbrush.py --caption-path "devtest_magicbrash_caption.json" --instruction-path "devtest_magicbrash_instruction.json"
-python3 scripts/get_instruction_magicbrush.py --caption-path "devtest_magicbrash_caption.json" --instruction-path "gpt4tools_71k.json"
+python3 scripts/get_instruction_magicbrush.py --caption-path "devtest_magicbrash_caption.json" --instruction-path "only_1500.json" --test-instruction-path "test_1500.json"
+python3 scripts/get_instruction_magicbrush.py --caption-path "devtest_magicbrash_caption.json" --instruction-path "ori71k_1500.json" --ori-instruction-path "gpt4tools_71k.json" --test-instruction-path "ori71k_1500_test.json"
+
+
+python3 get_cap_magicbrush.py --dev "train" --caption-path "train_magicbrash_caption.json"
+python3 scripts/get_instruction_magicbrush.py --caption-path "train_magicbrash_caption.json" --instruction-path "train_magicbrash_instruction.json"
+python3 scripts/get_instruction_magicbrush.py --caption-path "train_magicbrash_caption.json" --instruction-path "ori71k_1500.json" --ori-instruction-path "gpt4tools_71k.json"

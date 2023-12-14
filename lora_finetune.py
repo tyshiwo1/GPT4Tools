@@ -25,6 +25,7 @@ from transformers import LlamaForCausalLM, LlamaTokenizer
 from utils.prompter import Prompter
 
 
+
 def train(
     # model/data params
     base_model: str = "",  # the only required argument
@@ -37,7 +38,7 @@ def train(
     num_epochs: int = 3,
     learning_rate: float = 3e-4,
     cutoff_len: int = 256,
-    val_set_size: int = 2000,
+    val_set_size: int = 0,
     # lora hyperparams
     lora_r: int = 8,
     lora_alpha: int = 16,

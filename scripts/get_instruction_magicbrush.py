@@ -40,7 +40,7 @@ Tools:
 24. Crop Image: Useful when you want to crop a region or a part from the image. The input to this tool should be a comma-separated string of two, representing the image_path and the coordinates with the format of [x1, y1, x2, y2] that represents the top left and bottom right of the cropped region.
 25. Text Detection On Image: Useful when you want to detect the text in the image. The input to this tool should be a string, representing the image_path.
 26. Detection: Useful when you want to detect all objects of the image, but not detect a certain object according to the text. like: detect all the objects in this image, or detect this image. The input to this tool should be a string, representing the image_path.
-27. Edit Image Using Text: Useful when you want to change the objects according to the text. like: have the man a cowboy hat, or let the cat be angry and hiss, or add a bale of hay in filed. The input to this tool should be a comma-separated string of two, representing the image_path and the text. 
+27. Edit Image Using Text: Useful when you want to edit the objects according to the text. like: have the man a cowboy hat, or let the cat be angry, or add a bale of hay in filed or remove the wooden frame or turn the cheese burgers into donuts. The input to this tool should be a comma-separated string of two, representing the image_path and the text.
 
 Note that your generated visual instructions should be related to the image caption extremely. Please generate complex and deceptive instructions as much as possible.
 Directly reply to me with the list."""
@@ -65,8 +65,12 @@ if __name__=="__main__":
     # python3 scripts/get_instruction_magicbrush.py --caption-path ./caption_path.json --instruction-path ./instruction_path.json
     parser = argparse.ArgumentParser()
     parser.add_argument("--caption-path", required=True, help="path to caption file.")
+    parser.add_argument("--ori-instruction-path", default="", help="path to instruction file.")
     parser.add_argument("--instruction-path", required=True, help="path to instruction file.")
+    parser.add_argument("--test-instruction-path", required=True, help="path to instruction file.")
     parser.add_argument("--temperature", default=0.7, help="temperature for chatgpt.")
+    parser.add_argument("--num-train", default=30000, help="temperature for chatgpt.")
+    parser.add_argument("--test-num", default=100, help="temperature for chatgpt.")
     args = parser.parse_args()
 
     # openai.api_key = os.getenv('OPENAI_API_KEY')
@@ -82,10 +86,24 @@ if __name__=="__main__":
         f.close()
 
     caption_path = args.caption_path
+    test_num = args.test_num
+    ori_instruction_path = args.ori_instruction_path
     instruction_path = args.instruction_path
+    test_instruction_path = args.test_instruction_path
     temp = args.temperature
+    num_train = args.num_train 
+
+    ori_instruction = []
+    if len(ori_instruction_path) > 0:
+        with open(os.path.join('./', ori_instruction_path)) as f:
+            ori_instruction = json.load(f)
+            f.close()
+    
+        ori_instruction = ori_instruction[:num_train]
+
     annotations = json.load(open(caption_path, 'r'))
-    instructions = []
+    instructions = [] + ori_instruction
+    test_instr = []
     for idx, annot in enumerate(tqdm( annotations )):
         caption = annot['caption']
         messages = [{'role': 'system', 'content': INSTRUCTION_PROMPT.format(caption=caption)}]
@@ -105,9 +123,19 @@ if __name__=="__main__":
         instruction = used_edit_dict[file_name][session_idx]['instruction'] 
         response = instruction + ' [' + 'Edit Image Using Text' + ', ' + '"{}"'.format( annot['file_name'] )  + ' , ' + instruction + '] .'
 
-        instructions.append({'file_name': annot['file_name'], 'caption': caption, 'instructions': response, 'id': idx })
-        if idx % 10 == 0:
-            print(f'Dumping {idx}/{len(annotations)}')
-            json.dump(instructions, open(instruction_path, 'a'))
+        item_ins = {'file_name': annot['file_name'], 'caption': caption, 'instructions': response, 'id': idx }
+        if idx < len(annotations) - test_num:
+            instructions.append(item_ins)
+        else:
+            test_instr.append(item_ins)
+    
+    with open(os.path.join('./', instruction_path), 'w') as f:
+        json.dump(instructions, f)
+        f.close()
+    
+    with open(os.path.join('./', test_instruction_path), 'w') as f:
+        json.dump(test_instr, f)
+        f.close()
+
     print("Done!")    
     

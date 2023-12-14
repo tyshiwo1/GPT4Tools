@@ -28,6 +28,7 @@ from utils.prompter import Prompter
 def train(
     # model/data params
     base_model: str = "",  # the only required argument
+    lora_model: str = "",  # the only required argument
     data_path: str = "yahma/alpaca-cleaned",
     output_dir: str = "./lora-alpaca",
     # training hyperparams
@@ -56,11 +57,13 @@ def train(
     wandb_log_model: str = "",  # options: false | true
     resume_from_checkpoint: str = None,  # either training checkpoint or final adapter
     prompt_template_name: str = "alpaca",  # The prompt template to use, will default to alpaca.
+    cache_dir="./checkpoints",
 ):
     if int(os.environ.get("LOCAL_RANK", 0)) == 0:
         print(
             f"Training Alpaca-LoRA model with params:\n"
             f"base_model: {base_model}\n"
+            f"lora_model: {lora_model}\n"
             f"data_path: {data_path}\n"
             f"output_dir: {output_dir}\n"
             f"batch_size: {batch_size}\n"
@@ -82,6 +85,7 @@ def train(
             f"wandb_log_model: {wandb_log_model}\n"
             f"resume_from_checkpoint: {resume_from_checkpoint or False}\n"
             f"prompt template: {prompt_template_name}\n"
+            f"cache_dir: {cache_dir}\n"
         )
     assert (
         base_model
@@ -109,14 +113,14 @@ def train(
     if len(wandb_log_model) > 0:
         os.environ["WANDB_LOG_MODEL"] = wandb_log_model
 
-    cache_dir="./checkpoints"
+    
     model = LlamaForCausalLM.from_pretrained(
         base_model,
         load_in_8bit=True,
         torch_dtype=torch.float16,
         device_map=device_map,
         cache_dir=cache_dir, 
-    )
+    ) 
 
     tokenizer = LlamaTokenizer.from_pretrained(base_model, cache_dir=cache_dir, )
 
@@ -175,15 +179,28 @@ def train(
 
     model = prepare_model_for_int8_training(model)
 
-    config = LoraConfig(
-        r=lora_r,
-        lora_alpha=lora_alpha,
-        target_modules=lora_target_modules,
-        lora_dropout=lora_dropout,
-        bias="none",
-        task_type="CAUSAL_LM",
-    )
-    model = get_peft_model(model, config)
+    # print('lora_model', lora_model)
+    # assert False, '{}'.format(lora_model)
+    if len(lora_model) > 0:
+        # print('lora_model', lora_model)
+        # assert False
+        from peft import PeftModel
+        model = PeftModel.from_pretrained(
+            model,
+            lora_model,
+            torch_dtype=torch.float16, 
+            cache_dir=cache_dir, 
+        ) 
+    else:
+        config = LoraConfig(
+            r=lora_r,
+            lora_alpha=lora_alpha,
+            target_modules=lora_target_modules,
+            lora_dropout=lora_dropout,
+            bias="none",
+            task_type="CAUSAL_LM",
+        )
+        model = get_peft_model(model, config)
 
     if data_path.endswith(".json") or data_path.endswith(".jsonl"):
         data = load_dataset("json", data_files=data_path)

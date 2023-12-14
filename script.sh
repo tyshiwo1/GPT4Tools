@@ -15,3 +15,14 @@ CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_
 
 
 scp -r -P 22000 yaoteng@147.8.183.113:/home/yaoteng/checkpoints/
+
+
+
+
+
+# data preparation
+
+python3 get_cap_magicbrush.py --dev "dev" --global-descriptions "global_descriptions.json" --local-descriptions "local_descriptions.json" --caption-path "devtest_magicbrash_caption.json"
+python3 get_cap_magicbrush.py --dev "test" --global-descriptions "global_descriptions.json" --local-descriptions "local_descriptions.json" --caption-path "devtest_magicbrash_caption.json"
+python3 scripts/get_instruction_magicbrush.py --caption-path "devtest_magicbrash_caption.json" --instruction-path "devtest_magicbrash_instruction.json"
+python3 scripts/get_instruction_magicbrush.py --caption-path "devtest_magicbrash_caption.json" --instruction-path "gpt4tools_71k.json"

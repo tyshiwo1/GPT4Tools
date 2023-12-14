@@ -40,11 +40,12 @@ Tools:
 24. Crop Image: Useful when you want to crop a region or a part from the image. The input to this tool should be a comma-separated string of two, representing the image_path and the coordinates with the format of [x1, y1, x2, y2] that represents the top left and bottom right of the cropped region.
 25. Text Detection On Image: Useful when you want to detect the text in the image. The input to this tool should be a string, representing the image_path.
 26. Detection: Useful when you want to detect all objects of the image, but not detect a certain object according to the text. like: detect all the objects in this image, or detect this image. The input to this tool should be a string, representing the image_path.
-27. Edit Image Using Text: Useful when you want to change the objects according to the text. like: alter the action of the objects in this image, or change the facial expression of the people in this image according to the text, or complete the objects in the image according to the text, or remove the objects in this image according to the text. The input to this tool should be a comma-separated string of two, representing the image_path and the text. 
+27. Edit Image Using Text: Useful when you want to change the objects according to the text. like: have the man a cowboy hat, or let the cat be angry and hiss, or add a bale of hay in filed. The input to this tool should be a comma-separated string of two, representing the image_path and the text. 
 
 Note that your generated visual instructions should be related to the image caption extremely. Please generate complex and deceptive instructions as much as possible.
 Directly reply to me with the list."""
 
+# 27. Edit Image Using Text: Useful when you want to change the objects according to the text. like: alter the action of the objects in this image, or change the facial expression of the people in this image according to the text, or complete the objects in the image according to the text, or remove the objects in this image according to the text. The input to this tool should be a comma-separated string of two, representing the image_path and the text. 
 
 def chatgpt(messages, temperature=0.7):
     try:
@@ -76,6 +77,10 @@ if __name__=="__main__":
         edit_dict = json.load(f)
         f.close()
     
+    with open(os.path.join('./', 'test', 'edit_sessions.json')) as f:
+        test_edit_dict = json.load(f)
+        f.close()
+
     caption_path = args.caption_path
     instruction_path = args.instruction_path
     temp = args.temperature
@@ -87,12 +92,22 @@ if __name__=="__main__":
         
         # response = chatgpt(messages, temperature=temp)
         file_name = annot['file_name'].split('-')[0]
-        instruction = edit_dict[file_name][0]['instruction']
+        session_type = annot['file_name'].split('-')[-1].split('.')[0]
+        
+        session_idx = int( session_type[-1] ) if session_type!='input' else 0
+
+        used_edit_dict = edit_dict if file_name in edit_dict else (test_edit_dict)
+
+        if session_idx >= len(used_edit_dict[file_name]):
+            continue
+
+        # print(session_idx, len(used_edit_dict[file_name]), used_edit_dict[file_name], annot['file_name'], session_type)
+        instruction = used_edit_dict[file_name][session_idx]['instruction'] 
         response = instruction + ' [' + 'Edit Image Using Text' + ', ' + '"{}"'.format( annot['file_name'] )  + ' , ' + instruction + '] .'
 
         instructions.append({'file_name': annot['file_name'], 'caption': caption, 'instructions': response, 'id': idx })
         if idx % 10 == 0:
             print(f'Dumping {idx}/{len(annotations)}')
-            json.dump(instructions, open(instruction_path, 'w'))
+            json.dump(instructions, open(instruction_path, 'a'))
     print("Done!")    
     

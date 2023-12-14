@@ -151,12 +151,4 @@ The openai api_key should be set in the env (OPENAI_API_KEY).
 * [Vicuna](https://github.com/lm-sys/FastChat): The language ability of Vicuna is fantastic and amazing. And it is open-source!
 * [Alpaca-LoRA](https://github.com/tloen/alpaca-lora): Instruct-tune LLaMA on consumer hardware.
 
-If you're using our GPT4Tools in your research or applications, please cite using this BibTeX:
-```
-@misc{gpt4tools,
-  title = {GPT4Tools: Teaching LLM to Use Tools via Self-instruction},
-  author={Rui Yang, Lin Song, Yanwei Li, Sijie Zhao, Yixiao Ge, Xiu Li, Ying Shan},
-  journal={arXiv preprint arXiv:2305.18752},
-  year={2023}
-}
-```
+

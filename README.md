@@ -1,32 +1,14 @@
 # GPT4Tools: Teaching LLM to Use Tools via Self-instruction
 
-[Lin Song](http://linsong.info/), [Yanwei Li](https://yanwei-li.com/), [Rui Yang](https://github.com/Yangr116), Sijie Zhao, [Yixiao Ge](https://geyixiao.com/), [Ying Shan](https://scholar.google.com/citations?user=4oXBp9UAAAAJ&hl=en)
+Tengyao, Sun Kaiyue, Li Maomao
 
 GPT4Tools is a centralized system that can control multiple visual foundation models. 
 It is based on Vicuna (LLaMA), and 71K self-built instruction data.
 By analyzing the language content, GPT4Tools is capable of automatically deciding, controlling, and utilizing different visual foundation models, allowing the user to interact with images during a conversation.
 With this approach, GPT4Tools provides a seamless and efficient solution to fulfill various image-related requirements in a conversation.
 Different from previous work, we support users teach their own LLM to use tools with simple refinement via self-instruction and LoRA.
+ 
 
-<a href='https://gpt4tools.github.io'><img src='https://img.shields.io/badge/Project-Page-Green'></a>  <a href='https://huggingface.co/stevengrove/gpt4tools-vicuna-13b-lora'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model-blue'></a>  [![YouTube](https://badges.aleen42.com/src/youtube.svg)](https://youtu.be/Qrj94ibQIT8) [![arXiv](https://img.shields.io/badge/arXiv-Paper-<COLOR>.svg)](https://arxiv.org/pdf/2305.18752.pdf)
-
-## Updates
-
-* 🔥 We now release the <a href='https://arxiv.org/pdf/2305.18752.pdf'><strong><font color='#008AD7'>paper</font></strong></a> and new <a href='https://huggingface.co/spaces/stevengrove/GPT4Tools'><strong><font color='#008AD7'>demo</font></strong></a> with LLAVA, OPT, LlaMA and Vicuna.
-* 🔥 We released pretrained GPT4Tools models with <strong><font color="#008AD7">Vicuna-13B</font></strong> and released the dataset for <strong><font color="#008AD7">self-instruction</font></strong>. Check out the blog and demo.
-
-## Demo
-We provide some selected examples using GPT4Tools in this section. More examples can be found in our [project page](https://gpt4tools.github.io). Feel free to try our onlin [demo](https://c60eb7e9400930f31b.gradio.live)!
-
-
-<div align=center>
-<img width="80%" src="demos/demo.gif"/>
-</div>
-
-  |   |   |
-:-------------------------:|:-------------------------:
-![segment](demos/demo_seg.png) |  ![detect kps](demos/demo_kps.png)
-![solve problem](demos/demo_explain.png)  |  ![style transfer](demos/demo_style.png)
 
 ## Dataset
 | **Data file name** | **Size** | OneDrive| Google Driver|
@@ -46,24 +28,9 @@ We fed GPT-3.5 with captions from 3K images and descriptions of 22 visual tasks.
 
 ### Data Generation
 
-During generation using GPT-3.5, the openai api_key should be set in the env (OPENAI_API_KEY).
 
-* Raw Data Generation
-```
-python3 scripts/get_instruction.py --caption-path <your_caption_data_path> \
-	--instruction-path <instruction_data_path> 
-```
+xxxxxxxxx
 
-* Cleaning, and Instructional Data Consutruction
-```
-python3 scripts/generate_annoations.py --input-path <instruction_data_path> \
-	--output-path <annotations_path> \
-	--caption-path <your_caption_data_path> \
-	--alpaca-path <your_alpaca_instruction_path> \
-	--filter \
-	--complement \
-	--insert-alpaca
-```
 
 
 ## Models

@@ -6,11 +6,11 @@
 
 ### Tengyao, Sun Kaiyue, Li Maomao
 
-GPT4Tools is a centralized system that can control multiple visual foundation models. 
-It is based on Vicuna (LLaMA), and 71K self-built instruction data.
+Our work is based on GPT4Tools (https://github.com/AILab-CVC/GPT4Tools), which is a centralized system that can control multiple visual foundation models. It is based on Vicuna (LLaMA), and 71K self-built instruction data.
 By analyzing the language content, GPT4Tools is capable of automatically deciding, controlling, and utilizing different visual foundation models, allowing the user to interact with images during a conversation.
-With this approach, GPT4Tools provides a seamless and efficient solution to fulfill various image-related requirements in a conversation.
-Different from previous work, we support users teach their own LLM to use tools with simple refinement via self-instruction and LoRA.
+With this approach, GPT4Tools provides a seamless and efficient solution to fulfill various image-related requirements in a conversation. We empowere  Large Language Models with MagicBrush image editing ability.
+
+
  
 
 

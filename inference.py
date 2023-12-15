@@ -77,7 +77,9 @@ def load_model(base_model, lora_model, cache_dir=None):
         model = PeftModel.from_pretrained(
             model,
             lora_model,
-            torch_dtype=torch.float16,)
+            torch_dtype=torch.float16,
+            cache_dir=cache_dir,
+        )
         # set peft to inference mode
         model.config.inference_mode = True
 
@@ -120,7 +122,7 @@ def eval(args):
     
     # load model
     print("Loading Large Language Model (LLM)...")
-    tokenizer, model = load_model(base_model, lora_model)
+    tokenizer, model = load_model(base_model, lora_model) #, cache_dir='./checkpoints')
     if device == "cpu":
         model = model.float()
     else:

@@ -31,3 +31,10 @@ python3 scripts/get_instruction_magicbrush.py --caption-path "devtest_magicbrash
 python3 get_cap_magicbrush.py --dev "train" --caption-path "train_magicbrash_caption.json"
 python3 scripts/get_instruction_magicbrush.py --caption-path "train_magicbrash_caption.json" --instruction-path "train_magicbrash_instruction.json"
 python3 scripts/get_instruction_magicbrush.py --caption-path "train_magicbrash_caption.json" --instruction-path "ori71k_1500.json" --ori-instruction-path "gpt4tools_71k.json"
+
+
+
+
+
+CUDA_VISIBLE_DEVICES=3 python3 inference.py --base_model "lmsys/vicuna-13b-v1.5" --lora_model "stevengrove/gpt4tools-vicuna-13b-lora" --ann_path "./ori71k_1500_test.json" --save_path "./test" --llm_device 'cuda' --save_name "ori71k_1500_test"
+python3 evaluate_result.py --ann_path "./ori71k_1500_test.json" --save_name "./test_lora"

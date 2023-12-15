@@ -144,6 +144,7 @@ class EvalTools():
             pred_tool_name = re.findall('Action: (.*)', pred_res)
             pred_tool_name = self.fun_strip(pred_tool_name)
 
+            print(gt_tool_name,pred_tool_name, 'pred_tool_name' )
             action_res, action_gt = self.get_acc_item(gt_tool_name, pred_tool_name)
                 
             self.action_acc.append(np.mean(action_res))
@@ -160,6 +161,8 @@ class EvalTools():
             # 例如，一个 action 结束后，会继续提问 “Do I need use a tool? No”
             if len(pred_thought) == (1+len(pred_tool_name)) and pred_thought[-1] == "No":
                 pred_thought.pop(-1)
+            
+            print(gt_thought, pred_thought, 'pred_thought' )
             thought_res, thought_tgt = self.get_acc_item(gt_thought, pred_thought)
                 
             self.thought_acc.append(np.mean(thought_res))
